@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class LoginFragment : Fragment() {
 
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.102:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://IP:8099/")
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
