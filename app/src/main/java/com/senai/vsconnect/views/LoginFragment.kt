@@ -1,7 +1,6 @@
 package com.senai.vsconnect.views
 
 import android.os.Bundle
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.google.gson.JsonObject
 import com.senai.vsconnect.R
 import com.senai.vsconnect.apis.Endpoint
 import com.senai.vsconnect.databinding.FragmentLoginBinding
+import com.senai.vsconnect.models.Login
 import com.senai.vsconnect.utils.NetworkUtils
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class LoginFragment : Fragment() {
 
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://IP:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.102:8099/")
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -40,8 +40,10 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_sair_to_nav_servicos)
         }
 
+        val user = Login(email = "thiago3@email.com", password = "senai")
+
         // Fazendo uma requisição de login
-        endpointFile.login().enqueue(object : Callback<JsonObject> {
+        endpointFile.login(user).enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
                 // Tratamento de falha ao fazer a requisição
                 println("Falha na requisição de login: ${t.message}")
@@ -58,7 +60,6 @@ class LoginFragment : Fragment() {
                     println("Erro na resposta de login: ${response.code()}")
                 }
             }
-
 
         })
 
