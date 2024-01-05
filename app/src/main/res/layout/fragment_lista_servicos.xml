@@ -11,12 +11,13 @@
 >
 
     <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerServico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/fragment_servico"
 
-            tools:layout_editor_absoluteX="20dp"
-            android:layout_marginTop="48dp"
-    />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

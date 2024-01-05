@@ -3,6 +3,7 @@ package com.senai.vsconnect.apis
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.senai.vsconnect.models.Login
+import com.senai.vsconnect.models.Servico
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,7 +14,7 @@ interface Endpoint {
     //interface Endpoint => Métodos que o Retrofit irá chamar
 
     @GET("servicos")
-    fun listarServicos(): Call<JsonArray>
+    fun listarServicos(): Call<List<Servico>>
 
     @GET("usuarios/{idUsuario}")
     fun atualizarImagemDePerfil(

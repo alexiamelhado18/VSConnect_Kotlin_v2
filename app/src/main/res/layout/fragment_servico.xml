@@ -7,7 +7,7 @@
         android:padding="16dp"
         android:background="@drawable/style_edit_text"
         android:layout_marginBottom="35dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="15dp"
 >
 
     <!-- Layout horizontal para título e valor -->
@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Título"
+                android:textColor="@color/azul_marinho"
                 android:textSize="18sp"
                 android:fontFamily="@font/titilliumweb_bold"/>
 
