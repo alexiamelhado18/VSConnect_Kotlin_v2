@@ -9,7 +9,8 @@ class NetworkUtils {
             //O que faz esse return?
             return Retrofit.Builder()
                 .baseUrl(path)
-                .addConverterFactory(GsonConverterFactory.create()).build();
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         }
     }
 

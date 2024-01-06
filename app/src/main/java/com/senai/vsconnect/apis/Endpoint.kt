@@ -1,6 +1,5 @@
 package com.senai.vsconnect.apis
 
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.senai.vsconnect.models.Login
 import com.senai.vsconnect.models.Servico
@@ -22,5 +21,5 @@ interface Endpoint {
     ): Call<JsonObject>
 
     @POST("login")
-    fun login(@Body request: Login): Call<JsonObject>
+    fun login(@Body usuario: Login): Call<JsonObject>
 }

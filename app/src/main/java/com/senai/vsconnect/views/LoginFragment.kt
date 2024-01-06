@@ -1,5 +1,6 @@
 package com.senai.vsconnect.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ import retrofit2.Response
 
 class LoginFragment : Fragment() {
 
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.102:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.101:8099/")
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -40,61 +41,56 @@ class LoginFragment : Fragment() {
 
 
         btnEntrar.setOnClickListener {
-            val idEmail = root.findViewById<EditText>(R.id.campo_email)
-            val idSenha = root.findViewById<EditText>(R.id.campo_senha)
-
-            // Para obter o texto digitado
-            val emailDigitado = idEmail.text.toString()
-            val senhaDigitada = idSenha.text.toString()
-
-            val user = Login(email = emailDigitado, password = senhaDigitada)
-
-            val usuarioLogado = logado(user);
-
-            if (usuarioLogado){
-                // Navegar para a tela de serviços ao clicar no botão
-                findNavController().navigate(R.id.nav_servicos)
-            }else{
-                Toast.makeText(requireContext(), "Usuário não encontrado!", Toast.LENGTH_SHORT).show()
-            }
+            autenticarUsuario()
         }
 
         return root
     }
 
-    fun logado(user: Login): Boolean{
+    fun autenticarUsuario() {
 
-        var retornoAPI: Boolean = false
+        val root: View = binding.root
+
+        val idEmail = root.findViewById<EditText>(R.id.campo_email)
+        val idSenha = root.findViewById<EditText>(R.id.campo_senha)
+
+        // Para obter o texto digitado
+        val emailDigitado = idEmail.text.toString()
+        val senhaDigitada = idSenha.text.toString()
+
+        val usuario = Login(emailDigitado, senhaDigitada)
 
         // Fazendo uma requisição de login
-        endpointFile.login(user).enqueue(object : Callback<JsonObject> {
+        endpointFile.login(usuario).enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
-                // Tratamento de falha ao fazer a requisição
-                println("Falha na requisição de login: ${t.message}")
-                retornoAPI = false
-
+                tratarFalhaAutenticacao(t.message)
             }
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    // Tratamento bem-sucedido da resposta
-                    val jsonObject = response.body()
-                    // Processar o objeto JSON
-                    println(jsonObject)
 
-                    retornoAPI = true
-                } else {
-                    // Tratamento de erro na resposta
-                    println("Erro na resposta de login: ${response.code()}")
-                    println("Corpo da resposta: ${response.errorBody()?.string()}")
-                    retornoAPI = false
+                when (response.code()) {
+                    200 -> tratarAutenticacaoBemSucedida(response.body())
+                    400 -> tratarFalhaAutenticacao("E-mail/Senha inválidos")
+                    404 -> tratarFalhaAutenticacao("Usuário não encontrado!")
+                    403 -> tratarFalhaAutenticacao("Usuário sem permissão para se logar!")
+                    else -> tratarFalhaAutenticacao("Erro desconhecido: ${response.code()}")
                 }
             }
 
         })
-
-        return retornoAPI
     }
+
+    private fun tratarAutenticacaoBemSucedida(token: JsonObject?) {
+//        val intent = Intent(requireContext(), EditarImagemFragment::class.java)
+//        intent.putExtra("TOKEN", token)
+        findNavController().navigate(R.id.nav_servicos)
+    }
+
+    private fun tratarFalhaAutenticacao(mensagemErro: String?) {
+        println("Falha na requisição de login: $mensagemErro")
+        Toast.makeText(requireContext(), "Falha ao se logar!", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
