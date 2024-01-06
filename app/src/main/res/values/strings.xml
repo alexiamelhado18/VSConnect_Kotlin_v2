@@ -10,4 +10,7 @@
     <string name="menu_lista_servicos">Serviços</string>
     <string name="menu_editar_imagem">Editar Imagem</string>
     <string name="menu_login">Sair</string>
+
+    <string name="escolher_imagem">Escolher imagem</string>
+    <string name="capturar_imagem">Capturar imagem</string>
 </resources>
