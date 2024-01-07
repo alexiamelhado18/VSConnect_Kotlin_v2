@@ -1,6 +1,6 @@
 package com.senai.vsconnect.views
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +10,18 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.senai.vsconnect.R
 import com.senai.vsconnect.apis.Endpoint
 import com.senai.vsconnect.databinding.FragmentLoginBinding
 import com.senai.vsconnect.models.Login
 import com.senai.vsconnect.utils.NetworkUtils
+import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
 class LoginFragment : Fragment() {
 
@@ -69,7 +72,7 @@ class LoginFragment : Fragment() {
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
 
                 when (response.code()) {
-                    200 -> tratarAutenticacaoBemSucedida(response.body())
+                    200 -> tratarAutenticacaoBemSucedida(response.body().toString())
                     400 -> tratarFalhaAutenticacao("E-mail/Senha inválidos")
                     404 -> tratarFalhaAutenticacao("Usuário não encontrado!")
                     403 -> tratarFalhaAutenticacao("Usuário sem permissão para se logar!")
@@ -80,15 +83,35 @@ class LoginFragment : Fragment() {
         })
     }
 
-    private fun tratarAutenticacaoBemSucedida(token: JsonObject?) {
-//        val intent = Intent(requireContext(), EditarImagemFragment::class.java)
-//        intent.putExtra("TOKEN", token)
+    private fun tratarAutenticacaoBemSucedida(response: String) {
+        val id = decodificarToken(response)
+
+        val sharedPreferences = requireContext()
+            .getSharedPreferences("idUsuario", Context.MODE_PRIVATE)
+
+        val editor = sharedPreferences.edit()
+        editor.putString("idUsuario", id.toString())
+
+        editor.apply()
+
         findNavController().navigate(R.id.nav_servicos)
     }
 
     private fun tratarFalhaAutenticacao(mensagemErro: String?) {
         println("Falha na requisição de login: $mensagemErro")
         Toast.makeText(requireContext(), "Falha ao se logar!", Toast.LENGTH_SHORT).show()
+    }
+
+    fun decodificarToken(token: String): Any {
+        val partes = token.split(".")
+        val payloadBase64 = partes[1]
+
+        val payloadBytes = Base64.getUrlDecoder().decode(payloadBase64)
+        val payloadJson = String(payloadBytes, StandardCharsets.UTF_8)
+
+        val json = JSONObject(payloadJson)
+        return json["idUsuario"].toString()
+//        return json.optString("idUsuario", null)
     }
 
     override fun onDestroyView() {
