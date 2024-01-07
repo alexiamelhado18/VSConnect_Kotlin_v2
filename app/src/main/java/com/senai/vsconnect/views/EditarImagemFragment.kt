@@ -1,6 +1,7 @@
 package com.senai.vsconnect.views
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -33,6 +34,14 @@ class EditarImagemFragment : Fragment() {
 
         val root: View = binding.root
 
+        // Recuperar o ID do usuário
+        val sharedPreferences = requireContext()
+            .getSharedPreferences("idUsuario", Context.MODE_PRIVATE)
+
+        val id = sharedPreferences.getString("idUsuario", "")
+
+        println(id)
+
         val icone_lapis = root.findViewById<ImageView>(R.id.icone_lapis)
         // Adicione um clique ao ícone de lápis
         icone_lapis.setOnClickListener {
@@ -41,6 +50,7 @@ class EditarImagemFragment : Fragment() {
 
         return root
     }
+
     private fun mostrarOpcoesEscolhaImagem() {
         val escolherImagemIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         val capturarImagemIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
