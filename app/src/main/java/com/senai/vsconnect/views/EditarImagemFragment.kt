@@ -10,11 +10,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.google.gson.JsonObject
 import com.senai.vsconnect.R
+import com.senai.vsconnect.apis.Endpoint
 import com.senai.vsconnect.databinding.FragmentEditarImagemBinding
+import com.senai.vsconnect.utils.NetworkUtils
+import org.json.JSONObject
+import retrofit2.Call
+import java.util.UUID
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.nio.file.Paths
 
 class EditarImagemFragment : Fragment() {
+
+    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.0.104:8099/")
+
+    private val endpointFile = retrofitClient.create(Endpoint::class.java)
 
     private val IMAGEM_PERFIL_REQUEST_CODE = 123
 
@@ -40,7 +56,7 @@ class EditarImagemFragment : Fragment() {
 
         val id = sharedPreferences.getString("idUsuario", "")
 
-        println(id)
+        buscarUsuarioPorId(id.toString())
 
         val icone_lapis = root.findViewById<ImageView>(R.id.icone_lapis)
         // Adicione um clique ao ícone de lápis
@@ -49,6 +65,58 @@ class EditarImagemFragment : Fragment() {
         }
 
         return root
+    }
+
+    private fun buscarUsuarioPorId(idString: String) {
+        val idUUID: UUID = UUID.fromString(idString)
+
+        endpointFile.buscarUsuarioPorID(idUUID).enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                when (response.code()) {
+                    200 -> tratarBuscaDeUsuarioBemSucedida(response.body().toString())
+                    400 -> tratarFalhaNaBuscaDeUsuario("Id de usuário inválido")
+                    404 -> tratarFalhaNaBuscaDeUsuario("Usuário não encontrado.")
+                    else -> tratarFalhaNaBuscaDeUsuario("Erro ao encontrar usuário")
+                }
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                tratarFalhaNaBuscaDeUsuario(t.message)
+            }
+
+        })
+    }
+
+    private fun tratarBuscaDeUsuarioBemSucedida(response: String) {
+        val root: View = binding.root
+
+        val json = JSONObject(response)
+
+        // Suponha que você tenha uma ImageView no seu layout com o ID "imagem_perfil"
+        val viewImagemUsuario: ImageView = root.findViewById(R.id.imagem_perfil)
+
+        // Substitua a URL abaixo pela URL real da imagem no servidor
+//        val pathImagemUsuario = Paths.get(
+//            System.getProperty("user.dir"),
+//            "src",
+//            "main",
+//            "resources",
+//            "static",
+//            "img",
+//            json.getString("url_img")
+//        ).toString()
+
+        //val pathImagemUsuario = "C:\\Users\\teodo\\OneDrive\\Área de Trabalho\\ApiVsConnect\\apivsconnect\\src\\main\\resources\\static\\img\\" + json.getString("url_img")
+
+        // Carrega a imagem usando Glide
+//        Glide.with(this)
+//            .load(File(pathImagemUsuario))
+//            .into(viewImagemUsuario)
+    }
+
+    private fun tratarFalhaNaBuscaDeUsuario(mensagemErro: String?) {
+        println("Falha na requisição de login: $mensagemErro")
+        Toast.makeText(requireContext(), "Falha ao se logar!", Toast.LENGTH_SHORT).show()
     }
 
     private fun mostrarOpcoesEscolhaImagem() {
