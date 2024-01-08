@@ -7,7 +7,9 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
+import java.util.UUID
 
 interface Endpoint {
     //interface Endpoint => Métodos que o Retrofit irá chamar
@@ -15,9 +17,13 @@ interface Endpoint {
     @GET("servicos")
     fun listarServicos(): Call<List<Servico>>
 
-    @GET("usuarios/{idUsuario}")
+    @PUT("usuarios/{idUsuario}")
     fun atualizarImagemDePerfil(
-        @Path(value = "idUsuario", encoded = true) de: String,
+        @Path(value = "idUsuario", encoded = true) de: UUID
+    ): Call<JsonObject>
+
+    @GET("usuarios/{idUsuario}")
+    fun buscarUsuarioPorID(@Path(value = "idUsuario", encoded = true) de: UUID
     ): Call<JsonObject>
 
     @POST("login")
