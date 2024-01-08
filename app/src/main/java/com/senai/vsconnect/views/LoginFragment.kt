@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.senai.vsconnect.R
 import com.senai.vsconnect.apis.Endpoint
@@ -25,7 +24,7 @@ import java.util.Base64
 
 class LoginFragment : Fragment() {
 
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.101:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.0.104:8099/")
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -41,8 +40,6 @@ class LoginFragment : Fragment() {
 
         val btnEntrar = root.findViewById<Button>(R.id.btn_entrar)
 
-
-
         btnEntrar.setOnClickListener {
             autenticarUsuario()
         }
@@ -50,14 +47,14 @@ class LoginFragment : Fragment() {
         return root
     }
 
-    fun autenticarUsuario() {
+    private fun autenticarUsuario() {
 
         val root: View = binding.root
 
         val idEmail = root.findViewById<EditText>(R.id.campo_email)
         val idSenha = root.findViewById<EditText>(R.id.campo_senha)
 
-        // Para obter o texto digitado
+        // obtem o texto digitado
         val emailDigitado = idEmail.text.toString()
         val senhaDigitada = idSenha.text.toString()
 
@@ -102,7 +99,7 @@ class LoginFragment : Fragment() {
         Toast.makeText(requireContext(), "Falha ao se logar!", Toast.LENGTH_SHORT).show()
     }
 
-    fun decodificarToken(token: String): Any {
+    private fun decodificarToken(token: String): Any {
         val partes = token.split(".")
         val payloadBase64 = partes[1]
 
