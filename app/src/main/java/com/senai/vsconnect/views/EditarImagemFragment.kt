@@ -62,12 +62,12 @@ class EditarImagemFragment : Fragment() {
         val idUsuario = sharedPreferences.getString("idUsuario", "")
 
         // Chamar a função para buscar informações do usuário com base no ID
-        buscarUsuarioPorId(idUsuario.toString())
+        //buscarUsuarioPorId(idUsuario.toString())
 
         // Adicionar um clique ao ícone de lápis para permitir a escolha ou captura de imagem
-        iconeLapis.setOnClickListener {
-            mostrarOpcoesEscolhaImagem()
-        }
+//        iconeLapis.setOnClickListener {
+//            mostrarOpcoesEscolhaImagem()
+//        }
 
         return root
     }

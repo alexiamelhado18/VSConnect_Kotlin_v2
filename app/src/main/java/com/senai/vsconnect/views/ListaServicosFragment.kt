@@ -44,29 +44,29 @@ class ListaServicosFragment : Fragment() {
 
 
         // Listando os serviços cadastrados
-        endpointFile.listarServicos().enqueue(object : Callback<List<Servico>> {
-            override fun onFailure(call: Call<List<Servico>>, t: Throwable) {
-                // Tratamento de falha ao fazer a requisição
-                println("Falha na requisição: ${t.message}")
-            }
-
-            override fun onResponse(call: Call<List<Servico>>, response: Response<List<Servico>>) {
-                if (response.isSuccessful) {
-                    // Tratamento bem-sucedido da resposta (para uma lista de objetos JSON)
-                    val jsonArray = response.body()
-                    jsonArray?.forEach { jsonObject ->
-                        // Processar cada objeto JSON na lista
-                        println(jsonObject)
-                    }
-
-                    binding.recyclerServico.adapter = jsonArray?.let { ServicoAdapter(requireContext(), it) }
-
-                } else {
-                    // Tratamento de erro na resposta
-                    println("Erro na resposta: ${response.code()}")
-                }
-            }
-        })
+//        endpointFile.listarServicos().enqueue(object : Callback<List<Servico>> {
+//            override fun onFailure(call: Call<List<Servico>>, t: Throwable) {
+//                // Tratamento de falha ao fazer a requisição
+//                println("Falha na requisição: ${t.message}")
+//            }
+//
+//            override fun onResponse(call: Call<List<Servico>>, response: Response<List<Servico>>) {
+//                if (response.isSuccessful) {
+//                    // Tratamento bem-sucedido da resposta (para uma lista de objetos JSON)
+//                    val jsonArray = response.body()
+//                    jsonArray?.forEach { jsonObject ->
+//                        // Processar cada objeto JSON na lista
+//                        println(jsonObject)
+//                    }
+//
+//                    binding.recyclerServico.adapter = jsonArray?.let { ServicoAdapter(requireContext(), it) }
+//
+//                } else {
+//                    // Tratamento de erro na resposta
+//                    println("Erro na resposta: ${response.code()}")
+//                }
+//            }
+//        })
 
         return root
     }

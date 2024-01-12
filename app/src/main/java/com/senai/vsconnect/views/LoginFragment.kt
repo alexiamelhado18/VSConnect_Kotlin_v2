@@ -73,7 +73,9 @@ class LoginFragment : Fragment() {
         }
 
         btnEntrar.setOnClickListener {
-            autenticarUsuario()
+            //autenticarUsuario()
+            findNavController().navigate(R.id.action_nav_sair_to_nav_servicos)
+
         }
 
         return root
