@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ListaServicosFragment : Fragment() {
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.1.101:8099/");
+    private val retrofitClient = NetworkUtils.getRetrofitInstance();
 
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
 

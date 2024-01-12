@@ -24,7 +24,7 @@ import java.util.Base64
 
 class LoginFragment : Fragment() {
 
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://192.168.0.104:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance()
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -39,6 +39,38 @@ class LoginFragment : Fragment() {
         val root: View = binding.root
 
         val btnEntrar = root.findViewById<Button>(R.id.btn_entrar)
+
+
+        // Obtém o controlador de navegação associado ao fragmento
+        val navController = findNavController()
+
+        // Obtém a entrada anterior na pilha de retrocesso
+        val previousBackStackEntry = navController.previousBackStackEntry
+
+        // Verifica se há uma entrada anterior e obtém informações sobre ela
+        if (previousBackStackEntry != null) {
+            // Obtém o ID do destino anterior
+            val previousDestinationId = previousBackStackEntry.destination.id
+
+            // Faça algo com o ID do destino anterior
+            // Por exemplo, você pode verificar qual era a tela anterior
+            when (previousDestinationId) {
+                R.id.nav_servicos, R.id.nav_editar_imagem -> {
+
+                    val sharedPreferences = requireContext().getSharedPreferences("idUsuario", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+
+                    // Substitua "sua_chave" pelo nome da chave que você deseja excluir
+                    editor.remove("idUsuario")
+
+                    // Aplica as alterações
+                    editor.apply()
+
+                    println(sharedPreferences.getString("idUsuario", "Chave não encontrada"))
+                }
+
+            }
+        }
 
         btnEntrar.setOnClickListener {
             autenticarUsuario()
@@ -91,7 +123,9 @@ class LoginFragment : Fragment() {
 
         editor.apply()
 
-        findNavController().navigate(R.id.nav_servicos)
+        println(sharedPreferences.getString("idUsuario", "Chave não encontrada"))
+
+        findNavController().navigate(R.id.action_nav_sair_to_nav_servicos)
     }
 
     private fun tratarFalhaAutenticacao(mensagemErro: String?) {

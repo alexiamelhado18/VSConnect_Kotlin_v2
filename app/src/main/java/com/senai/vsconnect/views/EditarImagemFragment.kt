@@ -34,7 +34,7 @@ import java.io.InputStream
 class EditarImagemFragment : Fragment() {
 
     // Configuração do cliente Retrofit para comunicação com o servidor
-    private val retrofitClient = NetworkUtils.getRetrofitInstance("http://172.16.20.226:8099/")
+    private val retrofitClient = NetworkUtils.getRetrofitInstance()
     private val endpointFile = retrofitClient.create(Endpoint::class.java)
 
     // Código de requisição para a escolha da imagem

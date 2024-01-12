@@ -12,7 +12,7 @@
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:src="@drawable/logo"
+            android:src="@drawable/logo_light"
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/logo"
             app:layout_constraintStart_toStartOf="parent"
